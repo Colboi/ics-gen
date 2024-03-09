@@ -1,3 +1,6 @@
+cd /home/ubuntu/ics-gen/
+source /home/ubuntu/miniconda3/etc/profile.d/conda.sh
+conda activate ics
 
 python init.py
 

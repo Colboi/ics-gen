@@ -1,9 +1,7 @@
 import requests
-from bs4 import BeautifulSoup
 from datetime import datetime, timedelta, timezone
 import pytz
 import json
-from html import unescape
 import re
 from urllib.parse import unquote
 

@@ -1,6 +1,8 @@
 import os
 import json
 
+# if events.json doesn't exist, generate it
+
 JSON_FILE = 'events.json'
 
 if os.path.exists(JSON_FILE):

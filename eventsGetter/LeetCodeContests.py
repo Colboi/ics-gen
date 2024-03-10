@@ -21,7 +21,6 @@ with open(JSON_FILE, 'r') as f:
 options = Options()
 options.add_argument('--headless')
 options.add_argument('--no-sandbox')
-# options.add_argument('--remote-debugging-port=10000')
 
 driver = webdriver.Edge(options=options)
 driver.get(URL)

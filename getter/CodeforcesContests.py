@@ -30,8 +30,13 @@ for contest in contests:
     duration = timedelta(hours=int(duration_str.split(':')[0]), minutes=int(duration_str.split(':')[1]))
     # end time
     endTime = startTime + duration
-    sublink = infs[5].contents[1].attrs['href']
-    registerLink = f'https://codeforces.com{sublink}'
+    if 'href' in infs[5].contents[1].attrs:
+        sublink = infs[5].contents[1].attrs['href']
+        registerLink = f'https://codeforces.com{sublink}'
+        des = registerLink
+    else:
+        registerLink = 'https://codeforces.com/contests'
+        des = '报名链接暂不可用'
     events_dict[uid] = {
         "uid": uid,
         "name": name,
@@ -39,7 +44,7 @@ for contest in contests:
         "startTime": startTime.strftime('%Y%m%dT%H%M%SZ'),
         "endTime": endTime.strftime('%Y%m%dT%H%M%SZ'),
         "url": registerLink,
-        "description": registerLink
+        "description": des
     }
     print(f'{name} has processed')
 

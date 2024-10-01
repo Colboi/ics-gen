@@ -1,54 +1,29 @@
 import requests
-from bs4 import BeautifulSoup
+import logging
 from datetime import datetime, timedelta
-import pytz
 import json
 
-URL = 'https://codeforces.com/contests?complete=true'
-JSON_FILE = 'events.json'
+def Codeforces_contests() -> dict:
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
-contest_dict = {}
+    URL = 'https://codeforces.com/api/contest.list'
 
-with open(JSON_FILE, 'r') as f:
-    contest_dict = json.load(f)
-    events_dict = contest_dict['events']
+    contests = json.loads(requests.get(URL).text)['result']
+    
+    events = {}
 
-web_text = requests.get(URL).text
-datatable = BeautifulSoup(web_text, 'lxml').find_all('div', class_='datatable')[0]
-assert 'Current or upcoming contests' in datatable.text
-contests = datatable.find_all('tr', attrs={"data-contestid": True})
-for contest in contests:
-    infs = contest.find_all('td')
-    # name
-    name = infs[0].contents[0].strip()
-    # uid
-    uid = f'Codeforce_{name}'
-    # start time
-    startTime = datetime.strptime(infs[2].contents[1].contents[1].contents[0], '%b/%d/%Y %H:%M') - timedelta(hours=3)
-    # duration
-    duration_str = infs[3].contents[0].strip()
-    duration = timedelta(hours=int(duration_str.split(':')[0]), minutes=int(duration_str.split(':')[1]))
-    # end time
-    endTime = startTime + duration
-    if 'href' in infs[5].contents[1].attrs:
-        sublink = infs[5].contents[1].attrs['href']
-        registerLink = f'https://codeforces.com{sublink}'
-        des = registerLink
-    else:
-        registerLink = 'https://codeforces.com/contests'
-        des = '报名链接暂不可用'
-    events_dict[uid] = {
-        "uid": uid,
-        "name": name,
-        "now": datetime.now(pytz.utc).strftime('%Y%m%dT%H%M%SZ'),
-        "startTime": startTime.strftime('%Y%m%dT%H%M%SZ'),
-        "endTime": endTime.strftime('%Y%m%dT%H%M%SZ'),
-        "url": registerLink,
-        "description": des
-    }
-    print(f'{name} has processed')
+    for contest in contests:
+        # 2024-10-13T00:00:00+08:00
+        begin_time = datetime.fromtimestamp(contest['startTimeSeconds'])
+        events[f'Codeforces_{contest["id"]}'] = {
+            "name": contest['name'],
+            "begin": begin_time.strftime('%Y-%m-%dT%H:%M:%S'),
+            "end": (begin_time + timedelta(seconds=contest['durationSeconds'])).strftime('%Y-%m-%dT%H:%M:%S'),
+            "url": f'https://codeforces.com/contest/{contest["id"]}',
+            "description": f'https://codeforces.com/contest/{contest["id"]}'
+        }
+    
+    return events
 
-with open(JSON_FILE, 'w') as f:
-    json.dump(contest_dict, f, indent=4)
-
-print(f'{len(contests)} contests found in Codeforces')
+if __name__ == '__main__':
+    Codeforces_contests()

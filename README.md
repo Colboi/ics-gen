@@ -43,3 +43,7 @@ Each eventsGetter will read `events.json` and modify `events`' value then save f
 - You can use it in conjunction with *crontab*.
 
 - You can create your own *Flask* server referring to the example in `server` folder.
+
+# TODO
+
+- Add MySql support

@@ -5,7 +5,7 @@ import os
 
 app = Flask(__name__)
 
-FILES_DIRECTORY = '/home/ubuntu/ics-gen'
+FILES_DIRECTORY = '/home/ubuntu/code/ics-gen'
 
 @app.route('/contests', methods=['GET'])
 def get_contests():

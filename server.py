@@ -49,7 +49,7 @@ def get_nowcoder_contests():
 
 @app.route('/eoe', methods=['GET'])
 def get_eoe_schedule():
-    ics_file_path = os.path.join(FILES_DIRECTORY, "eoe.json")
+    ics_file_path = os.path.join(FILES_DIRECTORY, "eoe.ics")
     response = make_response(send_from_directory(directory=os.path.dirname(ics_file_path), 
                                                  path=os.path.basename(ics_file_path)))
     return response

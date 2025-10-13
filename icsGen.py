@@ -32,7 +32,7 @@ def ics_gen(prodid: str = "-//Colboi//Calendar Export//CN", ALARM=None):
         cal.add("version", "2.0")
         cal.add("calscale", "GREGORIAN")
         cal.add("method", "PUBLISH")
-        cal.add("X-WR-CALNAME", f'{getter.split("Contests")[0]} Contests')
+        cal.add("X-WR-CALNAME", f'{getter}')
         
         events = json.loads(open(f'json/{getter}.json', 'r').read())
 

@@ -1,0 +1,5 @@
+enable_getters:
+  - CodeforcesContests
+  - LeetCodeContests
+  - LuoguContests
+  - NowcoderContests

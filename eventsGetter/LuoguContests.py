@@ -12,7 +12,7 @@ HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
 }
 
-def Luogu_contests() -> dict:
+def Luogu_contests(json_file: str):
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
     web = requests.get(URL, headers=HEADERS)
@@ -30,9 +30,9 @@ def Luogu_contests() -> dict:
         # end time
         endTime = datetime.fromtimestamp(contest['endTime'])
         events[f'Luogu_{contest["id"]}'] = {
-            "name": contest['name'],
-            "begin": startTime.strftime('%Y-%m-%dT%H:%M:%S'),
-            "end": endTime.strftime('%Y-%m-%dT%H:%M:%S'),
+            "summary": contest['name'],
+            "dtstart": startTime.strftime('%Y-%m-%dT%H:%M:%S'),
+            "dtend": endTime.strftime('%Y-%m-%dT%H:%M:%S'),
             "url": f'https://www.luogu.com.cn/contest/{contest["id"]}',
             "description": f'https://www.luogu.com.cn/contest/{contest["id"]}'
         }
@@ -40,8 +40,7 @@ def Luogu_contests() -> dict:
         logging.info(f'{contest["name"]} has processed')
 
     logging.info(f'{count} contests found in Luogu')
-    
-    return events
+    json.dump(events, open(json_file, 'w'), indent=4)
 
 if __name__ == '__main__':
-    Luogu_contests()
+    Luogu_contests('json/LuoguContests.json')

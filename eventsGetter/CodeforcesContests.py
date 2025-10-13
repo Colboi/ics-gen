@@ -1,29 +1,31 @@
 import requests
-import logging
-from datetime import datetime, timedelta
 import json
+from datetime import datetime
+from zoneinfo import ZoneInfo
+import os
 
-def Codeforces_contests() -> dict:
-    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+SH_TZ = ZoneInfo("Asia/Shanghai")
 
-    URL = 'https://codeforces.com/api/contest.list'
+def get_codeforces_contests(json_file: str):
+    url = "https://codeforces.com/api/contest.list"
+    response = requests.get(url, timeout=10)
+    codeforces_contests = json.loads(response.text)['result']
 
-    contests = json.loads(requests.get(URL).text)['result']
+    if os.path.exists(json_file):
+        contests = json.loads(open(json_file, "r").read())
+    else:
+        contests = {}
     
-    events = {}
+    for cfcontest in codeforces_contests:
+        contest_id = f'codeforces_{cfcontest["id"]}'
+        contests[contest_id] = {}
+        # contests[contest_id]['id'] = cfcontest['id']
+        contests[contest_id]['summary'] = cfcontest['name']
+        contests[contest_id]['description'] = f'{cfcontest["type"]} scoring system'
+        contests[contest_id]['dtstart'] = datetime.fromtimestamp(cfcontest['startTimeSeconds'], tz=SH_TZ).isoformat()
+        contests[contest_id]['dtend'] = datetime.fromtimestamp(cfcontest['startTimeSeconds'] + cfcontest['durationSeconds'], tz=SH_TZ).isoformat()
+        contests[contest_id]['url'] = f'https://codeforces.com/contest/{cfcontest["id"]}'
+    json.dump(contests, open(json_file, "w"), indent=4)
 
-    for contest in contests:
-        # 2024-10-13T00:00:00+08:00
-        begin_time = datetime.fromtimestamp(contest['startTimeSeconds'])
-        events[f'Codeforces_{contest["id"]}'] = {
-            "name": contest['name'],
-            "begin": begin_time.strftime('%Y-%m-%dT%H:%M:%S'),
-            "end": (begin_time + timedelta(seconds=contest['durationSeconds'])).strftime('%Y-%m-%dT%H:%M:%S'),
-            "url": f'https://codeforces.com/contest/{contest["id"]}',
-            "description": f'https://codeforces.com/contest/{contest["id"]}'
-        }
-    
-    return events
-
-if __name__ == '__main__':
-    Codeforces_contests()
+if __name__ == "__main__":
+    get_codeforces_contests('json/CodeforcesContests.json')

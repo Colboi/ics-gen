@@ -7,13 +7,13 @@ app = Flask(__name__)
 
 FILES_DIRECTORY = 'ics'
 
-@app.route('/contests', methods=['GET'])
-def get_contests():
-    ics_file_path = os.path.join(FILES_DIRECTORY, "contests.ics")
-    response = make_response(send_from_directory(directory=os.path.dirname(ics_file_path), 
-                                                 path=os.path.basename(ics_file_path), 
-                                                 as_attachment=True))
-    return response
+# @app.route('/contests', methods=['GET'])
+# def get_contests():
+#     ics_file_path = os.path.join(FILES_DIRECTORY, "contests.ics")
+#     response = make_response(send_from_directory(directory=os.path.dirname(ics_file_path), 
+#                                                  path=os.path.basename(ics_file_path), 
+#                                                  as_attachment=True))
+#     return response
 
 @app.route('/CodeforcesContests', methods=['GET'])
 def get_codeforces_contests():
@@ -45,6 +45,13 @@ def get_nowcoder_contests():
     response = make_response(send_from_directory(directory=os.path.dirname(ics_file_path), 
                                                  path=os.path.basename(ics_file_path), 
                                                  as_attachment=True))
+    return response
+
+@app.route('/eoe', methods=['GET'])
+def get_eoe_schedule():
+    ics_file_path = os.path.join(FILES_DIRECTORY, "eoe.json")
+    response = make_response(send_from_directory(directory=os.path.dirname(ics_file_path), 
+                                                 path=os.path.basename(ics_file_path)))
     return response
 
 @app.route('/contests_raw', methods=['GET'])

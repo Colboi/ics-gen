@@ -1,6 +1,5 @@
 import os
 import json
-from zoneinfo import ZoneInfo
 import yaml
 from datetime import datetime
 from icalendar import Calendar, Event, vText

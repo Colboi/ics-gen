@@ -4,3 +4,4 @@ enable_getters:
   - LuoguContests
   - NowcoderContests
   - eoe
+  - AtCoderContests

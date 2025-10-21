@@ -55,7 +55,7 @@ def get_eoe_schedule():
     return response
 
 @app.route('/AtCoderContests', methods=['GET'])
-def get_eoe_schedule():
+def get_atcoder_schedule():
     ics_file_path = os.path.join(FILES_DIRECTORY, "AtCoderContests.ics")
     response = make_response(send_from_directory(directory=os.path.dirname(ics_file_path), 
                                                  path=os.path.basename(ics_file_path)))
